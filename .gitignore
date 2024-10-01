@@ -1,0 +1,16 @@
+# ignore system files
+.DS_Store
+
+# ignore built files
+*.o
+*.obj
+*.out
+*.exe
+*.a
+*.so
+*.dll
+*.dylib
+
+# ignore ide files
+.vscode/
+.idea/
