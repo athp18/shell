@@ -1,6 +1,7 @@
 #include "executor.h"
 #include <iostream>
 #include <sys/wait.h>
+#include <system_error>
 #include <unistd.h>
 #include <vector>
 
@@ -41,7 +42,7 @@ void execute_commands(const std::vector<Command> &commands) {
   for (size_t i = 0; i < num_commands - 1; ++i) {
     int fd[2];
     if (pipe(fd) == -1) {
-      perror("pipe failed");
+      throw std::system_error(errno, std::generic_category(), "pipe failed");
       return;
     }
     pipes.push_back(fd[0]); // read end
@@ -57,8 +58,8 @@ void execute_commands(const std::vector<Command> &commands) {
       // If not the first command, set stdin to the previous pipe's read end
       if (i > 0) {
         if (dup2(pipes[(i - 1) * 2], STDIN_FILENO) == -1) {
-          perror("dup2 failed");
-          exit(EXIT_FAILURE);
+          throw std::system_error(errno, std::generic_category(),
+                                  "dup2 failed");
         }
       }
 
@@ -66,8 +67,8 @@ void execute_commands(const std::vector<Command> &commands) {
       // set stdout to the current pipe's write end
       if (i < num_commands - 1) {
         if (dup2(pipes[i * 2 + 1], STDOUT_FILENO) == -1) {
-          perror("dup2 failed");
-          exit(EXIT_FAILURE);
+          throw std::system_error(errno, std::generic_category(),
+                                  "dup2 failed");
         }
       }
 
@@ -85,12 +86,10 @@ void execute_commands(const std::vector<Command> &commands) {
       c_args.push_back(nullptr);
 
       execvp(c_args[0], c_args.data());
-      perror("execvp failed");
-      exit(EXIT_FAILURE);
+      throw std::system_error(errno, std::generic_category(), "execvp failed");
     } else if (pid < 0) {
       // this mean the fork failed
-      perror("fork failed");
-      return;
+      throw std::system_error(errno, std::generic_category(), "fork failed");
     }
   }
 
