@@ -11,7 +11,7 @@
  * when the user presses `Ctrl+C` in the terminal. This function ensures that
  * the shell does not exit abruptly upon receiving `SIGINT`. Instead, it resets
  * the input line and redisplays the prompt, allowing the user to continue using
- * the shell seamlessly.
+ * the shell.
  *
  * **Functionality:**
  * - Moves the cursor to a new line to avoid overwriting the current input.
