@@ -1,4 +1,3 @@
-// signals.cpp
 #include "signals.h"
 #include <signal.h>
 #include <iostream>
