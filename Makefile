@@ -1,6 +1,6 @@
 CXX = g++
 BREW_PREFIX := $(shell brew --prefix readline)
-CXXFLAGS = -std=c++11 -Wall -I$(BREW_PREFIX)/include
+CXXFLAGS = -std=c++17 -Wall -I$(BREW_PREFIX)/include
 LDFLAGS = -L$(BREW_PREFIX)/lib
 
 SRC_DIR = src
